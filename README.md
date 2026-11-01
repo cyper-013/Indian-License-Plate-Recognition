@@ -63,8 +63,10 @@ git clone https://github.com/abewley/sort.git
 
 Place these in the project folder:
 
-- `yolov8n.pt`: the COCO vehicle detector (downloaded automatically by Ultralytics on first run)
-- `license_plate_detector.pt`: a trained license plate detection model (not included in this repo; obtain it separately)
+- `yolov8n.pt`: the official Ultralytics YOLOv8n COCO model (AGPL-3.0). Ultralytics downloads it automatically on first run.
+- `license_plate_detector.pt`: a single-class (`license_plate`) YOLOv8n plate detector, obtained from
+  [Automatic-License-Plate-Recognition-using-YOLOv8](https://github.com/Muhammad-Zeerak-Khan/Automatic-License-Plate-Recognition-using-YOLOv8)
+  by Muhammad Zeerak Khan. Please download it from there and see that repository for its terms.
 
 ## Usage
 
@@ -85,9 +87,17 @@ Press `q` to quit. Detected plates are printed to the console and appended to `i
 | Plate BBox | `[x1, y1, x2, y2]` of the plate |
 | Frame Number | Frame index at the time of logging |
 
+## Troubleshooting
+
+- **`No module named 'pkg_resources'`**: run `pip install "setuptools<81"`.
+- **`Weights only load failed` (PyTorch 2.6+)**: the plate detector was saved with an older Ultralytics release. Upgrade Ultralytics, or, for files you trust, load with `weights_only=False`.
+- **`module 'PIL.Image' has no attribute 'ANTIALIAS'`**: run `pip install "pillow<10"` or upgrade EasyOCR.
+- **`Neither CUDA nor MPS are available`**: you have a CPU-only PyTorch build. Install the CUDA build from [pytorch.org](https://pytorch.org).
+
 ## Known limitations
 
 - Validation accepts only 10-character plates in the `SS DD SS NNNN` pattern, so 9-character, BH-series and older formats are rejected.
+- The plate detector was not trained or evaluated by this project, so accuracy on Indian plates is not guaranteed.
 - Recognition accuracy depends on lighting, camera angle, plate condition and resolution.
 - Input is currently a live webcam feed.
 
@@ -99,13 +109,12 @@ by Computer Vision Engineer, which provided the base pipeline (vehicle detection
 
 This version extends it with a class-based structure, real-time webcam processing, Indian plate validation and formatting, per-vehicle best-result selection and incremental CSV logging.
 
+The license plate detection model comes from
+[Muhammad-Zeerak-Khan/Automatic-License-Plate-Recognition-using-YOLOv8](https://github.com/Muhammad-Zeerak-Khan/Automatic-License-Plate-Recognition-using-YOLOv8).
+
 ## Dependencies and acknowledgements
 
 - [SORT](https://github.com/abewley/sort) by Alex Bewley, for multi-object tracking
 - [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics)
 - [EasyOCR](https://github.com/JaidedAI/EasyOCR)
 - [OpenCV](https://opencv.org/)
-
-## License
-
-Add your license here. Check the licenses of the original repository and of SORT (GPL-3.0) and Ultralytics (AGPL-3.0), because they may affect how you can license and distribute this project.
